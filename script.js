@@ -102,6 +102,24 @@ function showHelp() {
     addMessage('<b>Help:</b>\n- Type or select a suggestion.\n- Use /breathe for a breathing exercise.\n- Select Journal for prompts.\n- Select Motivation for a quote.\n- Your responses are private and safe.', false);
 }
 
+async function sendEmpatheticReply(userMessage) {
+    try {
+        const res = await fetch(`${BASE_URL}/generate/empathetic-reply`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: userMessage })
+        });
+        const data = await res.json();
+        if (data.reply) {
+            addMessage(data.reply, false);
+        } else {
+            addMessage("I'm here for you. Sometimes just sharing how you feel can help.", false);
+        }
+    } catch (err) {
+        addMessage("I'm here for you. Sometimes just sharing how you feel can help.", false);
+    }
+}
+
 // Event Listeners
 sendButton.addEventListener('click', handleSend);
 messageInput.addEventListener('keypress', (e) => {
@@ -118,11 +136,9 @@ function handleSend() {
         return;
     }
     if (message.toLowerCase() === '/breathe') {
-        // Show breathing modal (handled in index.html)
         if (typeof startBreathingExercise === 'function') {
             startBreathingExercise();
         } else {
-            // fallback: try to show modal if available
             const breathingContainer = document.getElementById('breathingContainer');
             if (breathingContainer) breathingContainer.classList.add('active');
         }
@@ -135,10 +151,8 @@ function handleSend() {
         messageInput.value = '';
         return;
     }
-    // Default: Simulate bot response
-    setTimeout(() => {
-        addMessage("I'm here to support your mental wellness journey. Would you like to talk more about this?", false);
-    }, 1000);
+    // Default: Send to empathetic reply route
+    sendEmpatheticReply(message);
     messageInput.value = '';
 }
 
