@@ -13,4 +13,13 @@ router.post('/journal', async (req, res) => {
   }
 });
 
+router.get('/journal', async (req, res) => {
+  try {
+    const entries = await JournalEntry.find().sort({ timestamp: -1 });
+    res.json(entries);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch journal entries.' });
+  }
+});
+
 module.exports = router;

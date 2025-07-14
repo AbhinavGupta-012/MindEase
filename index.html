@@ -717,14 +717,14 @@
     
     <!-- Breathing Exercise Modal -->
     <div class="breathing-container" id="breathingContainer">
-        <div>
+        <div class="breathing-modal-content" style="position:relative;">
+            <button class="close-btn" id="closeBreathing" style="position:absolute;top:20px;right:20px;font-size:28px;background:none;border:none;color:white;cursor:pointer;z-index:2;">&times;</button>
             <div class="breathing-circle"></div>
             <div class="breathing-text" id="breathText">Breathe In</div>
             <div class="instructions">
                 <p>Follow the circle as it expands and contracts</p>
                 <p>Breathe in for 4 seconds, hold for 2, breathe out for 6 seconds</p>
             </div>
-            <button class="close-btn" id="closeBreathing"><i class="fas fa-times"></i></button>
         </div>
     </div>
     
@@ -762,248 +762,22 @@
         </div>
     </div>
 
+    <script src="script.js"></script>
     <script>
-        // DOM Elements
-        const chatContainer = document.getElementById('chatContainer');
-        const messageInput = document.getElementById('messageInput');
-        const sendButton = document.getElementById('sendButton');
+        // Add close modal logic for /breathe
         const breathingContainer = document.getElementById('breathingContainer');
         const closeBreathing = document.getElementById('closeBreathing');
-        const breathText = document.getElementById('breathText');
-        const suggestionCards = document.querySelectorAll('.suggestion-card');
-        const journalModal = document.getElementById('journalModal');
-        const promptsContainer = document.getElementById('promptsContainer');
-        const closeJournalModal = document.getElementById('closeJournalModal');
-        const quoteModal = document.getElementById('quoteModal');
-        const quoteText = document.getElementById('quoteText');
-        const saveQuoteBtn = document.getElementById('saveQuoteBtn');
-        const newQuoteBtn = document.getElementById('newQuoteBtn');
-        const closeQuoteBtn = document.getElementById('closeQuoteBtn');
-        
-        // State variables
-        let selectedPrompt = null;
-        let currentQuote = null;
-
-        // Add message to chat
-        function addMessage(text, isUser = false) {
-            // Create message group container
-            const messageGroup = document.createElement('div');
-            messageGroup.classList.add('message-group');
-            
-            // Create message element
-            const messageDiv = document.createElement('div');
-            messageDiv.classList.add('message');
-            messageDiv.classList.add(isUser ? 'user-message' : 'bot-message');
-            
-            // Apply animation based on sender
-            messageDiv.style.animation = isUser 
-                ? 'slideInRight 0.4s ease-out' 
-                : 'slideInLeft 0.4s ease-out';
-            
-            // Format message text
-            messageDiv.innerHTML = formatMessage(text);
-            
-            // Add timestamp
-            const now = new Date();
-            const timestamp = document.createElement('div');
-            timestamp.classList.add('timestamp');
-            timestamp.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            messageDiv.appendChild(timestamp);
-            
-            // Add to group and container
-            messageGroup.appendChild(messageDiv);
-            chatContainer.appendChild(messageGroup);
-            
-            // Scroll to bottom
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        }
-
-        // Format message text (replace commands with visual indicators)
-        function formatMessage(text) {
-            // Replace /breathe command with a visual indicator
-            return text.replace(/\/breathe/g, '<span class="breathe-command">/breathe 🌬️</span>');
-        }
-
-        // Handle sending messages
-        function sendMessage() {
-            const message = messageInput.value.trim();
-            if (message === '') return;
-            
-            // Add user message
-            addMessage(message, true);
-            
-            // Handle special commands
-            if (message.toLowerCase() === '/breathe') {
-                startBreathingExercise();
-                messageInput.value = '';
-                return;
-            }
-            
-            // Clear input
-            messageInput.value = '';
-            
-            // Simulate bot response (in a real app, this would be an API call)
-            setTimeout(() => {
-                simulateBotResponse(message);
-            }, 1000);
-        }
-
-        // Simulate bot response
-        function simulateBotResponse(userMessage) {
-            let response = "I'm here to support your mental wellness journey. Would you like to talk more about this?";
-            
-            // Handle journal response
-            if (selectedPrompt) {
-                saveJournalEntry(userMessage);
-                selectedPrompt = null;
-                return;
-            }
-            
-            // Handle keyword-based responses
-            if (userMessage.toLowerCase().includes('stress')) {
-                response = "Stress is a natural response. Let's explore some coping strategies. Would you like to try a breathing exercise? Type /breathe anytime.";
-            } else if (userMessage.toLowerCase().includes('anxious') || userMessage.toLowerCase().includes('anxiety')) {
-                response = "Anxiety can feel overwhelming. Remember to breathe deeply. Would you like to try a grounding exercise?";
-            } else if (userMessage.toLowerCase().includes('sad') || userMessage.toLowerCase().includes('depressed')) {
-                response = "I'm sorry you're feeling this way. It's okay to not be okay. Would you like to talk about what's on your mind?";
-            } else if (userMessage.toLowerCase().includes('happy') || userMessage.toLowerCase().includes('good')) {
-                response = "I'm glad to hear you're feeling good! 😊 Celebrating positive moments is important for mental wellness.";
-            } else if (userMessage.toLowerCase().includes('mindfulness') || userMessage.toLowerCase().includes('exercise')) {
-                response = "Try this mindfulness exercise: Focus on your breath for one minute. Notice the sensation of air entering and leaving your body. If your mind wanders, gently bring it back to your breath.";
-            } else if (userMessage.toLowerCase().includes('relaxation')) {
-                response = "Here's a relaxation technique: Progressive muscle relaxation. Tense each muscle group for 5 seconds, then relax for 30 seconds. Start from your toes and work up to your head.";
-            } else if (userMessage.toLowerCase().includes('feeling')) {
-                response = "It's important to acknowledge your feelings. Would you like to share more about what you're experiencing?";
-            }
-            
-            addMessage(response);
-        }
-
-        // Breathing exercise functions
-        function startBreathingExercise() {
-            breathingContainer.classList.add('active');
-            startBreathCycle();
-        }
-
-        function closeBreathingExercise() {
-            breathingContainer.classList.remove('active');
-        }
-
-        function startBreathCycle() {
-            let breathPhase = 0;
-            const phases = [
-                {text: "Breathe In", duration: 4000},
-                {text: "Hold", duration: 2000},
-                {text: "Breathe Out", duration: 6000}
-            ];
-            
-            function nextPhase() {
-                const phase = phases[breathPhase];
-                breathText.textContent = phase.text;
-                
-                setTimeout(() => {
-                    breathPhase = (breathPhase + 1) % phases.length;
-                    nextPhase();
-                }, phase.duration);
-            }
-            
-            nextPhase();
-        }
-
-        // Journal functions
-        function showJournalPrompts() {
-            journalModal.classList.add('active');
-            addMessage("Let me suggest some journaling prompts for you...", false);
-        }
-
-        function saveJournalEntry(response) {
-            addMessage("Thank you for sharing! Your journal entry has been saved.", false);
-            // In a real app, you would send this to your backend
-            console.log("Saving journal entry:", {
-                prompt: selectedPrompt,
-                response: response,
-                timestamp: new Date()
+        if (closeBreathing && breathingContainer) {
+            closeBreathing.addEventListener('click', () => {
+                breathingContainer.classList.remove('active');
             });
-        }
-
-        // Quote functions
-        function showMotivationalQuote() {
-            // Simulated quotes - in a real app you'd fetch from your API
-            const quotes = [
-                "Every day may not be good, but there's something good in every day.",
-                "You are stronger than you think and braver than you believe.",
-                "Progress, not perfection, is what truly matters.",
-                "Your mental health is a priority, not a luxury.",
-                "It's okay to not be okay. What matters is that you don't give up."
-            ];
-            
-            currentQuote = quotes[Math.floor(Math.random() * quotes.length)];
-            quoteText.textContent = currentQuote;
-            quoteModal.classList.add('active');
-        }
-
-        function saveQuote() {
-            // In a real app, you would save to localStorage or backend
-            const originalText = saveQuoteBtn.innerHTML;
-            saveQuoteBtn.innerHTML = '<i class="fas fa-check"></i> Saved!';
-            setTimeout(() => {
-                saveQuoteBtn.innerHTML = originalText;
-            }, 2000);
-        }
-
-        // Event listeners
-        sendButton.addEventListener('click', sendMessage);
-        
-        messageInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
-        });
-        
-        closeBreathing.addEventListener('click', closeBreathingExercise);
-        
-        // Add event listeners to suggestion cards
-        suggestionCards.forEach(card => {
-            card.addEventListener('click', () => {
-                const suggestionText = card.getAttribute('data-suggestion');
-                
-                if (suggestionText === 'Generate journal prompts') {
-                    showJournalPrompts();
-                } else if (suggestionText === 'Show me a motivational quote') {
-                    showMotivationalQuote();
-                } else {
-                    addMessage(suggestionText, true);
-                    setTimeout(() => {
-                        simulateBotResponse(suggestionText);
-                    }, 1000);
+            // Optional: close when clicking outside modal content
+            breathingContainer.addEventListener('click', (e) => {
+                if (e.target === breathingContainer) {
+                    breathingContainer.classList.remove('active');
                 }
             });
-        });
-        
-        // Journal prompt selection
-        document.querySelectorAll('.prompt-option').forEach(prompt => {
-            prompt.addEventListener('click', () => {
-                selectedPrompt = prompt.textContent;
-                journalModal.classList.remove('active');
-                addMessage(`You selected: "${selectedPrompt}". Please share your thoughts...`, false);
-            });
-        });
-        
-        // Modal close buttons
-        closeJournalModal.addEventListener('click', () => {
-            journalModal.classList.remove('active');
-        });
-        
-        saveQuoteBtn.addEventListener('click', saveQuote);
-        newQuoteBtn.addEventListener('click', showMotivationalQuote);
-        closeQuoteBtn.addEventListener('click', () => {
-            quoteModal.classList.remove('active');
-        });
-        
-        // Initialize with a welcome message
-        setTimeout(() => {
-            addMessage("You can click the suggestion cards above to get started quickly!", false);
-        }, 3000);
+        }
     </script>
 </body>
 </html>
