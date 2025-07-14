@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindEase | Mental Wellness Chatbot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --pastel-blue: #e3f2fd;
+            --pastel-green: #e8f5e9;
+            --pastel-purple: #f3e5f5;
+            --pastel-teal: #e0f7fa;
+            --light-gray: #f5f7fa;
+            --accent-blue: #64b5f6;
+            --accent-green: #81c784;
+            --accent-purple: #ba68c8;
+            --text-dark: #37474f;
+            --text-light: #607d8b;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--pastel-blue), var(--pastel-teal));
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 95vh;
+        }
+
+        header {
+            background: linear-gradient(to right, var(--accent-blue), var(--accent-purple));
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+            transform: rotate(30deg);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .logo i {
+            font-size: 28px;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 50%;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background-color: var(--light-gray);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 15px 18px;
+            border-radius: 18px;
+            position: relative;
+            animation: fadeIn 0.3s ease-out;
+            line-height: 1.5;
+            box-shadow: var(--shadow);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background-color: white;
+            border-bottom-left-radius: 4px;
+            color: var(--text-dark);
+            border: 1px solid #e0e0e0;
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background: linear-gradient(to right, var(--accent-blue), var(--accent-purple));
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .timestamp {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-top: 8px;
+            text-align: right;
+        }
+
+        .input-container {
+            display: flex;
+            padding: 15px 20px;
+            background-color: white;
+            border-top: 1px solid #e0e0e0;
+            gap: 10px;
+        }
+
+        input {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 30px;
+            background-color: var(--pastel-blue);
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+
+        input:focus {
+            background-color: white;
+            box-shadow: 0 0 0 2px var(--accent-blue);
+        }
+
+        button {
+            background: linear-gradient(to right, var(--accent-blue), var(--accent-purple));
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 55px;
+            height: 55px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        .breathing-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .breathing-container.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .breathing-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--accent-green), #4caf50);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: breathe 6s infinite ease-in-out;
+            box-shadow: 0 0 30px rgba(129, 199, 132, 0.7);
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.5); }
+        }
+
+        .breathing-text {
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .instructions {
+            color: white;
+            text-align: center;
+            margin-top: 30px;
+            line-height: 1.6;
+            max-width: 300px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Suggestions Section - Redesigned */
+        .suggestions-container {
+            padding: 20px;
+            background-color: white;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .suggestions-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .suggestions-title::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(to right, var(--accent-blue), var(--accent-purple));
+            border-radius: 3px;
+        }
+        
+        .suggestions-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .suggestion-card {
+            background-color: var(--pastel-purple);
+            border-radius: 15px;
+            padding: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid rgba(186, 104, 200, 0.3);
+            box-shadow: var(--shadow);
+        }
+        
+        .suggestion-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            background-color: rgba(186, 104, 200, 0.15);
+        }
+        
+        .suggestion-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(to right, var(--accent-blue), var(--accent-purple));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        
+        .suggestion-text {
+            font-size: 15px;
+            color: var(--text-dark);
+            line-height: 1.4;
+        }
+        
+        .message-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .message-group .timestamp {
+            margin-top: 4px;
+        }
+
+        .breathe-command {
+            font-weight: bold;
+            color: var(--accent-purple);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                height: 100vh;
+                border-radius: 0;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .logo i {
+                font-size: 24px;
+                padding: 8px;
+            }
+            
+            .suggestions-container {
+                padding: 15px;
+            }
+            
+            .suggestions-grid {
+                gap: 12px;
+            }
+            
+            .suggestion-card {
+                padding: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .input-container {
+                padding: 12px 15px;
+            }
+            
+            input {
+                padding: 12px 16px;
+                font-size: 14px;
+            }
+            
+            button {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .suggestions-container {
+                padding: 12px;
+            }
+            
+            .suggestions-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .suggestion-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 16px;
+            }
+            
+            .suggestion-text {
+                font-size: 14px;
+            }
+            
+            .chat-container {
+                padding: 15px;
+                gap: 15px;
+            }
+            
+            .message {
+                padding: 12px 15px;
+            }
+            
+            .suggestions-title {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <div>
+                    <h1>MindEase</h1>
+                    <div class="subtitle">Your mental wellness companion</div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Redesigned Suggestions Section -->
+        <div class="suggestions-container">
+            <div class="suggestions-title">How can I help you today?</div>
+            <div class="suggestions-grid">
+                <div class="suggestion-card" data-suggestion="How are you feeling today?">
+                    <div class="suggestion-icon">
+                        <i class="fas fa-smile"></i>
+                    </div>
+                    <div class="suggestion-text">How are you feeling today?</div>
+                </div>
+                
+                <div class="suggestion-card" data-suggestion="I need relaxation techniques">
+                    <div class="suggestion-icon">
+                        <i class="fas fa-spa"></i>
+                    </div>
+                    <div class="suggestion-text">I need relaxation techniques</div>
+                </div>
+                
+                <div class="suggestion-card" data-suggestion="Help me manage stress">
+                    <div class="suggestion-icon">
+                        <i class="fas fa-cloud-sun"></i>
+                    </div>
+                    <div class="suggestion-text">Help me manage stress</div>
+                </div>
+                
+                <div class="suggestion-card" data-suggestion="Tell me a mindfulness exercise">
+                    <div class="suggestion-icon">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <div class="suggestion-text">Tell me a mindfulness exercise</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chat-container" id="chatContainer">
+            <div class="message-group">
+                <div class="message bot-message">
+                    Hi there! 👋 I'm MindEase, your mental wellness companion. How can I support you today?
+                    <div class="timestamp">10:02 AM</div>
+                </div>
+                <div class="message bot-message">
+                    You can type <span class="breathe-command">/breathe</span> anytime to start a guided breathing exercise.
+                    <div class="timestamp">10:02 AM</div>
+                </div>
+            </div>
+            
+            <div class="message-group">
+                <div class="message bot-message">
+                    Remember to take breaks and be kind to yourself. Mental wellness is a journey, not a destination. 🌈
+                    <div class="timestamp">10:03 AM</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="input-container">
+            <input type="text" id="messageInput" placeholder="Type your message or /breathe...">
+            <button id="sendButton"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+    
+    <div class="breathing-container" id="breathingContainer">
+        <div>
+            <div class="breathing-circle"></div>
+            <div class="breathing-text" id="breathText">Breathe In</div>
+            <div class="instructions">
+                <p>Follow the circle as it expands and contracts</p>
+                <p>Breathe in for 4 seconds, hold for 2, breathe out for 6 seconds</p>
+            </div>
+            <button class="close-btn" id="closeBreathing"><i class="fas fa-times"></i></button>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const chatContainer = document.getElementById('chatContainer');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+        const breathingContainer = document.getElementById('breathingContainer');
+        const closeBreathing = document.getElementById('closeBreathing');
+        const breathText = document.getElementById('breathText');
+        const suggestionCards = document.querySelectorAll('.suggestion-card');
+
+        // Add message to chat
+        function addMessage(text, isUser = false) {
+            // Create message group container
+            const messageGroup = document.createElement('div');
+            messageGroup.classList.add('message-group');
+            
+            // Create message element
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.classList.add(isUser ? 'user-message' : 'bot-message');
+            
+            // Format message text
+            messageDiv.innerHTML = formatMessage(text);
+            
+            // Add timestamp
+            const now = new Date();
+            const timestamp = document.createElement('div');
+            timestamp.classList.add('timestamp');
+            timestamp.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            messageDiv.appendChild(timestamp);
+            
+            // Add to group and container
+            messageGroup.appendChild(messageDiv);
+            chatContainer.appendChild(messageGroup);
+            
+            // Scroll to bottom
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        // Format message text (replace commands with visual indicators)
+        function formatMessage(text) {
+            // Replace /breathe command with a visual indicator
+            return text.replace(/\/breathe/g, '<span class="breathe-command">/breathe 🌬️</span>');
+        }
+
+        // Handle sending messages
+        function sendMessage() {
+            const message = messageInput.value.trim();
+            if (message === '') return;
+            
+            // Add user message
+            addMessage(message, true);
+            
+            // Handle special commands
+            if (message.toLowerCase() === '/breathe') {
+                startBreathingExercise();
+                messageInput.value = '';
+                return;
+            }
+            
+            // Clear input
+            messageInput.value = '';
+            
+            // Simulate bot response (in a real app, this would be an API call)
+            setTimeout(() => {
+                simulateBotResponse(message);
+            }, 1000);
+        }
+
+        // Simulate bot response
+        function simulateBotResponse(userMessage) {
+            let response = "I'm here to support your mental wellness journey. Would you like to talk more about this?";
+            
+            if (userMessage.toLowerCase().includes('stress')) {
+                response = "Stress is a natural response. Let's explore some coping strategies. Would you like to try a breathing exercise? Type /breathe anytime.";
+            } else if (userMessage.toLowerCase().includes('anxious') || userMessage.toLowerCase().includes('anxiety')) {
+                response = "Anxiety can feel overwhelming. Remember to breathe deeply. Would you like to try a grounding exercise?";
+            } else if (userMessage.toLowerCase().includes('sad') || userMessage.toLowerCase().includes('depressed')) {
+                response = "I'm sorry you're feeling this way. It's okay to not be okay. Would you like to talk about what's on your mind?";
+            } else if (userMessage.toLowerCase().includes('happy') || userMessage.toLowerCase().includes('good')) {
+                response = "I'm glad to hear you're feeling good! 😊 Celebrating positive moments is important for mental wellness.";
+            } else if (userMessage.toLowerCase().includes('mindfulness') || userMessage.toLowerCase().includes('exercise')) {
+                response = "Try this mindfulness exercise: Focus on your breath for one minute. Notice the sensation of air entering and leaving your body. If your mind wanders, gently bring it back to your breath.";
+            } else if (userMessage.toLowerCase().includes('relaxation')) {
+                response = "Here's a relaxation technique: Progressive muscle relaxation. Tense each muscle group for 5 seconds, then relax for 30 seconds. Start from your toes and work up to your head.";
+            } else if (userMessage.toLowerCase().includes('feeling')) {
+                response = "It's important to acknowledge your feelings. Would you like to share more about what you're experiencing?";
+            }
+            
+            addMessage(response);
+        }
+
+        // Breathing exercise functions
+        function startBreathingExercise() {
+            breathingContainer.classList.add('active');
+            startBreathCycle();
+        }
+
+        function closeBreathingExercise() {
+            breathingContainer.classList.remove('active');
+        }
+
+        function startBreathCycle() {
+            let breathPhase = 0;
+            const phases = [
+                {text: "Breathe In", duration: 4000},
+                {text: "Hold", duration: 2000},
+                {text: "Breathe Out", duration: 6000}
+            ];
+            
+            function nextPhase() {
+                const phase = phases[breathPhase];
+                breathText.textContent = phase.text;
+                
+                setTimeout(() => {
+                    breathPhase = (breathPhase + 1) % phases.length;
+                    nextPhase();
+                }, phase.duration);
+            }
+            
+            nextPhase();
+        }
+
+        // Event listeners
+        sendButton.addEventListener('click', sendMessage);
+        
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        
+        closeBreathing.addEventListener('click', closeBreathingExercise);
+        
+        // Add event listeners to suggestion cards
+        suggestionCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const suggestionText = card.getAttribute('data-suggestion');
+                addMessage(suggestionText, true);
+                
+                // Clear input
+                messageInput.value = '';
+                
+                // Simulate bot response
+                setTimeout(() => {
+                    simulateBotResponse(suggestionText);
+                }, 1000);
+            });
+        });
+    </script>
+</body>
+</html>
