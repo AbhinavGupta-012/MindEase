@@ -95,6 +95,100 @@
             margin-top: 5px;
         }
 
+        .journal-link {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .journal-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .suggestions-container {
+            padding: 20px;
+            background-color: white;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .suggestions-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .suggestions-title::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(to right, var(--accent-blue), var(--accent-purple));
+            border-radius: 3px;
+        }
+        
+        .suggestions-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .suggestion-card {
+            background-color: var(--pastel-purple);
+            border-radius: 15px;
+            padding: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid rgba(186, 104, 200, 0.3);
+            box-shadow: var(--shadow);
+        }
+        
+        .suggestion-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            background-color: rgba(186, 104, 200, 0.15);
+        }
+        
+        .suggestion-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(to right, var(--accent-blue), var(--accent-purple));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        
+        .suggestion-text {
+            font-size: 15px;
+            color: var(--text-dark);
+            line-height: 1.4;
+        }
+        
         .chat-container {
             flex: 1;
             overflow-y: auto;
@@ -118,6 +212,16 @@
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
         .bot-message {
@@ -256,79 +360,6 @@
             cursor: pointer;
         }
 
-        /* Suggestions Section - Redesigned */
-        .suggestions-container {
-            padding: 20px;
-            background-color: white;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        
-        .suggestions-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 15px;
-            text-align: center;
-            position: relative;
-            padding-bottom: 10px;
-        }
-        
-        .suggestions-title::after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 50px;
-            height: 3px;
-            background: linear-gradient(to right, var(--accent-blue), var(--accent-purple));
-            border-radius: 3px;
-        }
-        
-        .suggestions-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-        }
-        
-        .suggestion-card {
-            background-color: var(--pastel-purple);
-            border-radius: 15px;
-            padding: 15px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            border: 1px solid rgba(186, 104, 200, 0.3);
-            box-shadow: var(--shadow);
-        }
-        
-        .suggestion-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-            background-color: rgba(186, 104, 200, 0.15);
-        }
-        
-        .suggestion-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(to right, var(--accent-blue), var(--accent-purple));
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-size: 18px;
-            flex-shrink: 0;
-        }
-        
-        .suggestion-text {
-            font-size: 15px;
-            color: var(--text-dark);
-            line-height: 1.4;
-        }
-        
         .message-group {
             display: flex;
             flex-direction: column;
@@ -342,6 +373,177 @@
         .breathe-command {
             font-weight: bold;
             color: var(--accent-purple);
+        }
+
+        /* New Modals */
+        .modal-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal-container.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .modal-content h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--accent-purple);
+        }
+        
+        .prompts-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .prompt-option {
+            background: var(--pastel-purple);
+            padding: 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(186, 104, 200, 0.3);
+        }
+        
+        .prompt-option:hover {
+            background: rgba(186, 104, 200, 0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 24px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-close:hover {
+            background: var(--pastel-blue);
+            color: var(--accent-blue);
+        }
+        
+        .quote-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .quote-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .quote-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px 30px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .quote-text {
+            font-size: 22px;
+            line-height: 1.6;
+            color: var(--text-dark);
+            font-style: italic;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .quote-text::before,
+        .quote-text::after {
+            content: '"';
+            font-size: 50px;
+            color: var(--accent-purple);
+            opacity: 0.3;
+            position: absolute;
+        }
+        
+        .quote-text::before {
+            top: -20px;
+            left: -15px;
+        }
+        
+        .quote-text::after {
+            content: '"';
+            bottom: -40px;
+            right: -15px;
+        }
+        
+        .quote-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .quote-actions button {
+            background: linear-gradient(to right, var(--accent-blue), var(--accent-purple));
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .quote-actions button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         @media (max-width: 768px) {
@@ -373,6 +575,13 @@
             
             .suggestion-card {
                 padding: 12px;
+            }
+
+            .journal-link {
+                top: 15px;
+                right: 15px;
+                font-size: 14px;
+                padding: 6px 12px;
             }
         }
 
@@ -434,9 +643,12 @@
                     <div class="subtitle">Your mental wellness companion</div>
                 </div>
             </div>
+            <a href="journal.html" class="journal-link">
+                <i class="fas fa-book"></i> Journal
+            </a>
         </header>
         
-        <!-- Redesigned Suggestions Section -->
+        <!-- Suggestions Section -->
         <div class="suggestions-container">
             <div class="suggestions-title">How can I help you today?</div>
             <div class="suggestions-grid">
@@ -461,11 +673,18 @@
                     <div class="suggestion-text">Help me manage stress</div>
                 </div>
                 
-                <div class="suggestion-card" data-suggestion="Tell me a mindfulness exercise">
+                <div class="suggestion-card" data-suggestion="Generate journal prompts">
                     <div class="suggestion-icon">
-                        <i class="fas fa-leaf"></i>
+                        <i class="fas fa-feather"></i>
                     </div>
-                    <div class="suggestion-text">Tell me a mindfulness exercise</div>
+                    <div class="suggestion-text">Journaling prompts</div>
+                </div>
+                
+                <div class="suggestion-card" data-suggestion="Show me a motivational quote">
+                    <div class="suggestion-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="suggestion-text">Motivational quote</div>
                 </div>
             </div>
         </div>
@@ -496,6 +715,7 @@
         </div>
     </div>
     
+    <!-- Breathing Exercise Modal -->
     <div class="breathing-container" id="breathingContainer">
         <div>
             <div class="breathing-circle"></div>
@@ -505,6 +725,40 @@
                 <p>Breathe in for 4 seconds, hold for 2, breathe out for 6 seconds</p>
             </div>
             <button class="close-btn" id="closeBreathing"><i class="fas fa-times"></i></button>
+        </div>
+    </div>
+    
+    <!-- Journal Prompts Modal -->
+    <div class="modal-container" id="journalModal">
+        <div class="modal-content">
+            <h3>Choose a Journal Prompt</h3>
+            <div class="prompts-container" id="promptsContainer">
+                <div class="prompt-option">What are three things you're grateful for today?</div>
+                <div class="prompt-option">Describe a challenge you faced and how you handled it</div>
+                <div class="prompt-option">What's something you'd like to let go of?</div>
+                <div class="prompt-option">Write about a moment that made you smile recently</div>
+            </div>
+            <button class="modal-close" id="closeJournalModal">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Motivational Quote Modal -->
+    <div class="quote-modal" id="quoteModal">
+        <div class="quote-content">
+            <div class="quote-text" id="quoteText">Every day may not be good, but there's something good in every day.</div>
+            <div class="quote-actions">
+                <button id="saveQuoteBtn">
+                    <i class="fas fa-bookmark"></i> Save Quote
+                </button>
+                <button id="newQuoteBtn">
+                    <i class="fas fa-sync"></i> New Quote
+                </button>
+                <button id="closeQuoteBtn">
+                    <i class="fas fa-times"></i> Close
+                </button>
+            </div>
         </div>
     </div>
 
@@ -517,6 +771,18 @@
         const closeBreathing = document.getElementById('closeBreathing');
         const breathText = document.getElementById('breathText');
         const suggestionCards = document.querySelectorAll('.suggestion-card');
+        const journalModal = document.getElementById('journalModal');
+        const promptsContainer = document.getElementById('promptsContainer');
+        const closeJournalModal = document.getElementById('closeJournalModal');
+        const quoteModal = document.getElementById('quoteModal');
+        const quoteText = document.getElementById('quoteText');
+        const saveQuoteBtn = document.getElementById('saveQuoteBtn');
+        const newQuoteBtn = document.getElementById('newQuoteBtn');
+        const closeQuoteBtn = document.getElementById('closeQuoteBtn');
+        
+        // State variables
+        let selectedPrompt = null;
+        let currentQuote = null;
 
         // Add message to chat
         function addMessage(text, isUser = false) {
@@ -528,6 +794,11 @@
             const messageDiv = document.createElement('div');
             messageDiv.classList.add('message');
             messageDiv.classList.add(isUser ? 'user-message' : 'bot-message');
+            
+            // Apply animation based on sender
+            messageDiv.style.animation = isUser 
+                ? 'slideInRight 0.4s ease-out' 
+                : 'slideInLeft 0.4s ease-out';
             
             // Format message text
             messageDiv.innerHTML = formatMessage(text);
@@ -581,6 +852,14 @@
         function simulateBotResponse(userMessage) {
             let response = "I'm here to support your mental wellness journey. Would you like to talk more about this?";
             
+            // Handle journal response
+            if (selectedPrompt) {
+                saveJournalEntry(userMessage);
+                selectedPrompt = null;
+                return;
+            }
+            
+            // Handle keyword-based responses
             if (userMessage.toLowerCase().includes('stress')) {
                 response = "Stress is a natural response. Let's explore some coping strategies. Would you like to try a breathing exercise? Type /breathe anytime.";
             } else if (userMessage.toLowerCase().includes('anxious') || userMessage.toLowerCase().includes('anxiety')) {
@@ -631,6 +910,47 @@
             nextPhase();
         }
 
+        // Journal functions
+        function showJournalPrompts() {
+            journalModal.classList.add('active');
+            addMessage("Let me suggest some journaling prompts for you...", false);
+        }
+
+        function saveJournalEntry(response) {
+            addMessage("Thank you for sharing! Your journal entry has been saved.", false);
+            // In a real app, you would send this to your backend
+            console.log("Saving journal entry:", {
+                prompt: selectedPrompt,
+                response: response,
+                timestamp: new Date()
+            });
+        }
+
+        // Quote functions
+        function showMotivationalQuote() {
+            // Simulated quotes - in a real app you'd fetch from your API
+            const quotes = [
+                "Every day may not be good, but there's something good in every day.",
+                "You are stronger than you think and braver than you believe.",
+                "Progress, not perfection, is what truly matters.",
+                "Your mental health is a priority, not a luxury.",
+                "It's okay to not be okay. What matters is that you don't give up."
+            ];
+            
+            currentQuote = quotes[Math.floor(Math.random() * quotes.length)];
+            quoteText.textContent = currentQuote;
+            quoteModal.classList.add('active');
+        }
+
+        function saveQuote() {
+            // In a real app, you would save to localStorage or backend
+            const originalText = saveQuoteBtn.innerHTML;
+            saveQuoteBtn.innerHTML = '<i class="fas fa-check"></i> Saved!';
+            setTimeout(() => {
+                saveQuoteBtn.innerHTML = originalText;
+            }, 2000);
+        }
+
         // Event listeners
         sendButton.addEventListener('click', sendMessage);
         
@@ -646,17 +966,44 @@
         suggestionCards.forEach(card => {
             card.addEventListener('click', () => {
                 const suggestionText = card.getAttribute('data-suggestion');
-                addMessage(suggestionText, true);
                 
-                // Clear input
-                messageInput.value = '';
-                
-                // Simulate bot response
-                setTimeout(() => {
-                    simulateBotResponse(suggestionText);
-                }, 1000);
+                if (suggestionText === 'Generate journal prompts') {
+                    showJournalPrompts();
+                } else if (suggestionText === 'Show me a motivational quote') {
+                    showMotivationalQuote();
+                } else {
+                    addMessage(suggestionText, true);
+                    setTimeout(() => {
+                        simulateBotResponse(suggestionText);
+                    }, 1000);
+                }
             });
         });
+        
+        // Journal prompt selection
+        document.querySelectorAll('.prompt-option').forEach(prompt => {
+            prompt.addEventListener('click', () => {
+                selectedPrompt = prompt.textContent;
+                journalModal.classList.remove('active');
+                addMessage(`You selected: "${selectedPrompt}". Please share your thoughts...`, false);
+            });
+        });
+        
+        // Modal close buttons
+        closeJournalModal.addEventListener('click', () => {
+            journalModal.classList.remove('active');
+        });
+        
+        saveQuoteBtn.addEventListener('click', saveQuote);
+        newQuoteBtn.addEventListener('click', showMotivationalQuote);
+        closeQuoteBtn.addEventListener('click', () => {
+            quoteModal.classList.remove('active');
+        });
+        
+        // Initialize with a welcome message
+        setTimeout(() => {
+            addMessage("You can click the suggestion cards above to get started quickly!", false);
+        }, 3000);
     </script>
 </body>
 </html>
