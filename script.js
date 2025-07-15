@@ -20,6 +20,27 @@ let currentQuote = null;
 
 const BASE_URL = 'http://localhost:5000';
 
+// --- Markdown rendering for bot messages ---
+function renderMarkdownSafe(text) {
+    // Escape HTML
+    let safe = text.replace(/[&<>]/g, function(tag) {
+        const chars = {'&':'&amp;','<':'&lt;','>':'&gt;'}; return chars[tag] || tag;
+    });
+    // Bold: **text**
+    safe = safe.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    // Italic: _text_ or *text*
+    safe = safe.replace(/\b_(.+?)_\b/g, '<em>$1</em>');
+    safe = safe.replace(/\*(.+?)\*/g, '<em>$1</em>');
+    // Bullets: lines starting with *
+    if (/^\s*\*/m.test(safe)) {
+        safe = safe.replace(/(^|\n)\s*\* (.+?)(?=\n|$)/g, '$1<li>$2</li>');
+        safe = safe.replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>');
+    }
+    // Line breaks
+    safe = safe.replace(/\n/g, '<br>');
+    return safe;
+}
+
 // Helper: Add message to chat
 function addMessage(text, isUser = false) {
     const messageGroup = document.createElement('div');
@@ -27,7 +48,13 @@ function addMessage(text, isUser = false) {
     const messageDiv = document.createElement('div');
     messageDiv.classList.add('message', isUser ? 'user-message' : 'bot-message');
     messageDiv.style.animation = isUser ? 'slideInRight 0.4s' : 'slideInLeft 0.4s';
-    messageDiv.innerHTML = text;
+    // Format message text
+    if (isUser) {
+        messageDiv.textContent = text;
+    } else {
+        messageDiv.innerHTML = renderMarkdownSafe(text);
+    }
+    // Add timestamp
     const now = new Date();
     const timestamp = document.createElement('div');
     timestamp.classList.add('timestamp');
@@ -176,6 +203,21 @@ suggestionCards.forEach(card => {
         }
     });
 });
+
+// Suggestions dropdown toggle logic
+const suggestionsToggle = document.getElementById('suggestionsToggle');
+const suggestionsContainer = document.getElementById('suggestionsContainer');
+if (suggestionsToggle && suggestionsContainer) {
+    suggestionsToggle.addEventListener('click', () => {
+        suggestionsContainer.classList.toggle('suggestions-hidden');
+    });
+    // Auto-close dropdown on suggestion click
+    suggestionsContainer.addEventListener('click', (e) => {
+        if (e.target.closest('.suggestion-card')) {
+            suggestionsContainer.classList.add('suggestions-hidden');
+        }
+    });
+}
 
 // Expose for debugging
 window.fetchJournalPrompt = fetchJournalPrompt;
