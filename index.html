@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -122,7 +123,7 @@
             background-color: white;
             border-bottom: 1px solid #e0e0e0;
         }
-        
+
         .suggestions-title {
             font-size: 18px;
             font-weight: 600;
@@ -132,7 +133,7 @@
             position: relative;
             padding-bottom: 10px;
         }
-        
+
         .suggestions-title::after {
             content: "";
             position: absolute;
@@ -144,13 +145,13 @@
             background: linear-gradient(to right, var(--accent-blue), var(--accent-purple));
             border-radius: 3px;
         }
-        
+
         .suggestions-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 15px;
         }
-        
+
         .suggestion-card {
             background-color: var(--pastel-purple);
             border-radius: 15px;
@@ -163,13 +164,13 @@
             border: 1px solid rgba(186, 104, 200, 0.3);
             box-shadow: var(--shadow);
         }
-        
+
         .suggestion-card:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
             background-color: rgba(186, 104, 200, 0.15);
         }
-        
+
         .suggestion-icon {
             width: 40px;
             height: 40px;
@@ -182,13 +183,13 @@
             font-size: 18px;
             flex-shrink: 0;
         }
-        
+
         .suggestion-text {
             font-size: 15px;
             color: var(--text-dark);
             line-height: 1.4;
         }
-        
+
         .chat-container {
             flex: 1;
             overflow-y: auto;
@@ -210,18 +211,39 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @keyframes slideInRight {
-            from { opacity: 0; transform: translateX(30px); }
-            to { opacity: 1; transform: translateX(0); }
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
-        
+
         @keyframes slideInLeft {
-            from { opacity: 0; transform: translateX(-30px); }
-            to { opacity: 1; transform: translateX(0); }
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         .bot-message {
@@ -299,16 +321,16 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 1000;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.5s cubic-bezier(.4, 0, .2, 1);
         }
 
         .breathing-container.active {
@@ -316,48 +338,99 @@
             pointer-events: all;
         }
 
-        .breathing-circle {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            background: radial-gradient(circle, var(--accent-green), #4caf50);
+        .breathing-modal-content {
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(100, 100, 200, 0.10);
+            padding: 48px 32px 36px 32px;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            animation: breathe 6s infinite ease-in-out;
-            box-shadow: 0 0 30px rgba(129, 199, 132, 0.7);
+            min-width: 320px;
+            min-height: 340px;
+            position: relative;
+            animation: breatheFadeIn 0.7s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        @keyframes breatheFadeIn {
+            from {
+                transform: translateY(40px) scale(0.98);
+                opacity: 0;
+            }
+
+            to {
+                transform: none;
+                opacity: 1;
+            }
+        }
+
+        .breathing-circle {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 60% 40%, #b3e5fc 60%, #ba68c8 100%);
+            box-shadow: 0 0 40px 0 #ba68c880;
+            margin: 0 auto 32px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: box-shadow 0.3s;
         }
 
         @keyframes breathe {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.5); }
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.5);
+            }
         }
 
         .breathing-text {
-            color: white;
-            font-size: 24px;
+            font-size: 2.1rem;
             font-weight: 600;
+            color: #5e35b1;
+            margin-bottom: 12px;
             text-align: center;
-            margin-top: 20px;
+            font-family: 'Segoe UI', 'Nunito', 'Quicksand', Arial, sans-serif;
+            letter-spacing: 0.5px;
+            min-height: 2.5em;
+            transition: color 0.4s;
         }
 
         .instructions {
-            color: white;
+            font-size: 1.1rem;
+            color: #7b7b9d;
             text-align: center;
-            margin-top: 30px;
-            line-height: 1.6;
-            max-width: 300px;
+            margin-top: 8px;
+            font-family: 'Segoe UI', 'Nunito', Arial, sans-serif;
         }
 
         .close-btn {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            color: white;
-            background: transparent;
+            top: 18px;
+            right: 18px;
+            background: none;
             border: none;
-            font-size: 24px;
+            font-size: 2.2rem;
+            color: #5e35b1;
             cursor: pointer;
+            transition: color 0.2s;
+            z-index: 1002;
+            line-height: 1;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-btn:hover {
+            color: #ba68c8;
+            background: #e3f2fd;
         }
 
         .message-group {
@@ -391,12 +464,12 @@
             pointer-events: none;
             transition: opacity 0.3s ease;
         }
-        
+
         .modal-container.active {
             opacity: 1;
             pointer-events: all;
         }
-        
+
         .modal-content {
             background: white;
             border-radius: 20px;
@@ -408,19 +481,19 @@
             position: relative;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
         }
-        
+
         .modal-content h3 {
             text-align: center;
             margin-bottom: 20px;
             color: var(--accent-purple);
         }
-        
+
         .prompts-container {
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
-        
+
         .prompt-option {
             background: var(--pastel-purple);
             padding: 15px;
@@ -429,13 +502,13 @@
             transition: all 0.3s ease;
             border: 1px solid rgba(186, 104, 200, 0.3);
         }
-        
+
         .prompt-option:hover {
             background: rgba(186, 104, 200, 0.15);
             transform: translateY(-3px);
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
         }
-        
+
         .modal-close {
             position: absolute;
             top: 15px;
@@ -453,12 +526,12 @@
             justify-content: center;
             transition: all 0.3s ease;
         }
-        
+
         .modal-close:hover {
             background: var(--pastel-blue);
             color: var(--accent-blue);
         }
-        
+
         .quote-modal {
             position: fixed;
             top: 0;
@@ -474,12 +547,12 @@
             pointer-events: none;
             transition: opacity 0.3s ease;
         }
-        
+
         .quote-modal.active {
             opacity: 1;
             pointer-events: all;
         }
-        
+
         .quote-content {
             background: white;
             border-radius: 20px;
@@ -490,7 +563,7 @@
             position: relative;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
         }
-        
+
         .quote-text {
             font-size: 22px;
             line-height: 1.6;
@@ -499,7 +572,7 @@
             margin-bottom: 30px;
             position: relative;
         }
-        
+
         .quote-text::before,
         .quote-text::after {
             content: '"';
@@ -508,25 +581,25 @@
             opacity: 0.3;
             position: absolute;
         }
-        
+
         .quote-text::before {
             top: -20px;
             left: -15px;
         }
-        
+
         .quote-text::after {
             content: '"';
             bottom: -40px;
             right: -15px;
         }
-        
+
         .quote-actions {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             gap: 10px;
         }
-        
+
         .quote-actions button {
             background: linear-gradient(to right, var(--accent-blue), var(--accent-purple));
             color: white;
@@ -540,7 +613,7 @@
             gap: 8px;
             transition: all 0.3s ease;
         }
-        
+
         .quote-actions button:hover {
             transform: translateY(-3px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
@@ -551,28 +624,28 @@
                 height: 100vh;
                 border-radius: 0;
             }
-            
+
             .message {
                 max-width: 90%;
             }
-            
+
             h1 {
                 font-size: 24px;
             }
-            
+
             .logo i {
                 font-size: 24px;
                 padding: 8px;
             }
-            
+
             .suggestions-container {
                 padding: 15px;
             }
-            
+
             .suggestions-grid {
                 gap: 12px;
             }
-            
+
             .suggestion-card {
                 padding: 12px;
             }
@@ -589,50 +662,70 @@
             .input-container {
                 padding: 12px 15px;
             }
-            
+
             input {
                 padding: 12px 16px;
                 font-size: 14px;
             }
-            
+
             button {
                 width: 50px;
                 height: 50px;
             }
-            
+
             .suggestions-container {
                 padding: 12px;
             }
-            
+
             .suggestions-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .suggestion-icon {
                 width: 36px;
                 height: 36px;
                 font-size: 16px;
             }
-            
+
             .suggestion-text {
                 font-size: 14px;
             }
-            
+
             .chat-container {
                 padding: 15px;
                 gap: 15px;
             }
-            
+
             .message {
                 padding: 12px 15px;
             }
-            
+
             .suggestions-title {
                 font-size: 16px;
             }
         }
+
+        @media (max-width: 600px) {
+            .breathing-modal-content {
+                min-width: 0;
+                width: 95vw;
+                padding: 32px 8vw 24px 8vw;
+            }
+
+            .breathing-circle {
+                width: 90vw;
+                max-width: 220px;
+                height: 90vw;
+                max-height: 220px;
+            }
+
+            .breathing-text {
+                font-size: 1.3rem;
+            }
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <header>
@@ -647,7 +740,7 @@
                 <i class="fas fa-book"></i> Journal
             </a>
         </header>
-        
+
         <!-- Suggestions Section -->
         <div class="suggestions-container">
             <div class="suggestions-title">How can I help you today?</div>
@@ -658,28 +751,28 @@
                     </div>
                     <div class="suggestion-text">How are you feeling today?</div>
                 </div>
-                
+
                 <div class="suggestion-card" data-suggestion="I need relaxation techniques">
                     <div class="suggestion-icon">
                         <i class="fas fa-spa"></i>
                     </div>
                     <div class="suggestion-text">I need relaxation techniques</div>
                 </div>
-                
+
                 <div class="suggestion-card" data-suggestion="Help me manage stress">
                     <div class="suggestion-icon">
                         <i class="fas fa-cloud-sun"></i>
                     </div>
                     <div class="suggestion-text">Help me manage stress</div>
                 </div>
-                
+
                 <div class="suggestion-card" data-suggestion="Generate journal prompts">
                     <div class="suggestion-icon">
                         <i class="fas fa-feather"></i>
                     </div>
                     <div class="suggestion-text">Journaling prompts</div>
                 </div>
-                
+
                 <div class="suggestion-card" data-suggestion="Show me a motivational quote">
                     <div class="suggestion-icon">
                         <i class="fas fa-star"></i>
@@ -688,7 +781,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="chat-container" id="chatContainer">
             <div class="message-group">
                 <div class="message bot-message">
@@ -696,11 +789,12 @@
                     <div class="timestamp">10:02 AM</div>
                 </div>
                 <div class="message bot-message">
-                    You can type <span class="breathe-command">/breathe</span> anytime to start a guided breathing exercise.
+                    You can type <span class="breathe-command">/breathe</span> anytime to start a guided breathing
+                    exercise.
                     <div class="timestamp">10:02 AM</div>
                 </div>
             </div>
-            
+
             <div class="message-group">
                 <div class="message bot-message">
                     Remember to take breaks and be kind to yourself. Mental wellness is a journey, not a destination. 🌈
@@ -708,26 +802,28 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="input-container">
             <input type="text" id="messageInput" placeholder="Type your message or /breathe...">
             <button id="sendButton"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
-    
+
+    <!-- Breathing Exercise Modal -->
     <!-- Breathing Exercise Modal -->
     <div class="breathing-container" id="breathingContainer">
-        <div class="breathing-modal-content" style="position:relative;">
-            <button class="close-btn" id="closeBreathing" style="position:absolute;top:20px;right:20px;font-size:28px;background:none;border:none;color:white;cursor:pointer;z-index:2;">&times;</button>
+        <div class="breathing-modal-content">
+            <button class="close-btn" id="closeBreathing" aria-label="Close">&times;</button>
             <div class="breathing-circle"></div>
             <div class="breathing-text" id="breathText">Breathe In</div>
             <div class="instructions">
                 <p>Follow the circle as it expands and contracts</p>
-                <p>Breathe in for 4 seconds, hold for 2, breathe out for 6 seconds</p>
+                <p>Breathe in for 4s, hold for 4s, breathe out for 4s</p>
             </div>
         </div>
     </div>
-    
+
+
     <!-- Journal Prompts Modal -->
     <div class="modal-container" id="journalModal">
         <div class="modal-content">
@@ -743,11 +839,12 @@
             </button>
         </div>
     </div>
-    
+
     <!-- Motivational Quote Modal -->
     <div class="quote-modal" id="quoteModal">
         <div class="quote-content">
-            <div class="quote-text" id="quoteText">Every day may not be good, but there's something good in every day.</div>
+            <div class="quote-text" id="quoteText">Every day may not be good, but there's something good in every day.
+            </div>
             <div class="quote-actions">
                 <button id="saveQuoteBtn">
                     <i class="fas fa-bookmark"></i> Save Quote
@@ -780,4 +877,5 @@
         }
     </script>
 </body>
+
 </html>
