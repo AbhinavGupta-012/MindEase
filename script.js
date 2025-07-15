@@ -18,7 +18,7 @@ const closeQuoteBtn = document.getElementById('closeQuoteBtn');
 let selectedPrompt = null;
 let currentQuote = null;
 
-const BASE_URL = fetch('https://mindease-27ua.onrender.com/generate/motivation');
+const BASE_URL = 'http://localhost:5000';
 
 // --- Markdown rendering for bot messages ---
 function renderMarkdownSafe(text) {
