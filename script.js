@@ -18,7 +18,7 @@ const closeQuoteBtn = document.getElementById('closeQuoteBtn');
 let selectedPrompt = null;
 let currentQuote = null;
 
-const BASE_URL = 'http://localhost:5000';
+const BASE_URL = fetch('https://your-backend-url.onrender.com/generate/motivation');
 
 // --- Markdown rendering for bot messages ---
 function renderMarkdownSafe(text) {
