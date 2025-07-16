@@ -8,7 +8,8 @@ const geminiRoutes = require('./routes/geminiRoutes');
 
 const app = express();
 
-app.use(cors());
+// CORS: Allow all origins for now. To restrict, set origin: 'https://your-netlify-app.netlify.app'
+app.use(cors({ origin: '*' }));
 app.use(express.json());
 
 app.use(journalRoutes);

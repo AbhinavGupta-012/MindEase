@@ -18,7 +18,11 @@ const closeQuoteBtn = document.getElementById('closeQuoteBtn');
 let selectedPrompt = null;
 let currentQuote = null;
 
-const BASE_URL = 'http://localhost:5000';
+// --- BASE_URL selection for deployment/local ---
+// Use deployed backend by default, but allow localhost override for local dev
+const BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+  ? 'http://localhost:5000'
+  : 'https://mindease-27ua.onrender.com';
 
 // --- Markdown rendering for bot messages ---
 function renderMarkdownSafe(text) {
